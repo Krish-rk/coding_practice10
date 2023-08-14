@@ -198,22 +198,29 @@ app.put(
   }
 );
 
-//STATS
+//Get stats API
 app.get(
   "/states/:stateId/stats/",
   authenticateToken,
   async (request, response) => {
     const { stateId } = request.params;
-    const statQuery = `
-    SELECT SUM(case) as totalCases,
-    SUM(cured) as totalCured ,
-    SUM(active) as totalActive,
-    SUM(deaths) as totalDeaths
-    from state WHERE state_id =${stateId}
-    GROUP BY state_id
-    ;`;
-    const stats = await db.get(statQuery);
-    response.send(stats);
+    const getStateStatsQuery = `
+    SELECT
+      SUM(cases),
+      SUM(cured),
+      SUM(active),
+      SUM(deaths)
+    FROM
+      district
+    WHERE
+      state_id=${stateId};`;
+    const stats = await db.get(getStateStatsQuery);
+    response.send({
+      totalCases: stats["SUM(cases)"],
+      totalCured: stats["SUM(cured)"],
+      totalActive: stats["SUM(active)"],
+      totalDeaths: stats["SUM(deaths)"],
+    });
   }
 );
 
