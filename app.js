@@ -37,7 +37,7 @@ const authenticateToken = (request, response, next) => {
   }
   if (jwtToken === undefined) {
     response.status(401);
-    response.send("Invalid JWT TOKEN");
+    response.send("Invalid JWT Token");
   } else {
     jwt.verify(jwtToken, "MY_SECRET_TOKEN", async (error, payload) => {
       if (error) {
@@ -108,7 +108,7 @@ app.get("/states/:stateId/", authenticateToken, async (request, response) => {
   response.send({
     stateId: state.state_id,
     stateName: state.state_name,
-    poupulation: state.population,
+    population: state.population,
   });
 });
 
